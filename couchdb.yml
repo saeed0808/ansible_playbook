@@ -1,0 +1,54 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  
+   - name: ensure python is installed
+     apt: name=python state=present 
+
+   - name: if already installed, ensure CouchDB is not running (otherwise, the Erlang processes get in the way)
+     service: name=couchdb state=stopped
+     ignore_errors: yes
+  
+   - name: ensure ntpd is at the latest version
+     apt: pkg=ntp state=latest
+  
+   - name: Install libicu-dev
+     apt:
+       name: libicu-dev
+       update_cache: yes
+       state: present
+
+   - name: ensure erlang reltool is installed
+     apt:
+       name: erlang-reltool
+       update_cache: yes
+       state: present
+
+   - name: ensure Python pip is installed
+     apt:
+       name: python-pip
+       update_cache: yes
+       state: present
+
+   - name: ensure sphinx is installed
+     shell: pip install sphinx
+   
+   - name: add repository
+    #command: echo "deb https://apache.bintray.com/couchdb-deb bionic main" | sudo tee -a  /etc/apt/sources.list
+     command: echo "deb https://apache.bintray.com/couchdb-deb xenial main" \ | sudo tee -a /etc/apt/sources.list
+ 
+   - name: add repository2
+    #shell: curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc \ | sudo apt-key add -
+     shell: curl -L https://couchdb.apache.org/repo/bintray-pubkey.asc \ | sudo apt-key add -
+
+   - name: update apt cache
+     command: apt-get update
+
+   - name: ensure couchdb is installed
+#    apt: pkg=couchdb state=latest update_cache=yes
+     command: sudo apt-get install couchdb -y
+
+   - name: ensure couchdb is running
+     action: service name=couchdb state=started
+
