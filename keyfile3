@@ -1,0 +1,27 @@
+---
+- hosts: all
+  tasks:  
+   - name: Creates .ssh directory for root
+     file: path=/home/vagrant/.ssh state=directory
+
+# This public key is set on Github repo Settings under "Deploy keys"
+   - name: Upload the private key used for Github cloning
+     copy: src=/home/saeed/.ssh/ dest=/home/vagrant/.ssh/github
+
+   - name: Correct SSH deploy key permissions
+     sudo: yes
+     file: 
+      path: /home/vagrant/.ssh/github/
+      owner: vagrant
+      group: vagrant
+      mode: 0744
+
+   - name: Deploy site files from Github repository
+     git:
+      repo: git@gitlab.com:bcjukebox/serverapi.git
+      dest: /home/vagrant/jukebox
+      version: master
+      accept_hostkey: yes
+      force: yes
+      key_file: /home/vagrant/.ssh/github/id_rsa
+     become: true  
