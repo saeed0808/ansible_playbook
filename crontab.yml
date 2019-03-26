@@ -1,0 +1,153 @@
+---
+# example of job defenation:
+# .------------------  minute (0-59)
+# |  .----------------  hour (0-23)
+# |  |  .-------------- date (1-31)
+# |  |  |  .------------ month (1-12) jan, feb, mar, apr.......
+# |  |  |  |  .---------week (0-6) (sun=0 or 7) or sun mon tue wed thu fri
+# |  |  |  |  |
+# |  |  |  |  |
+# |  |  |  |  |
+# *  *  *  *  *
+- hosts: all
+  remote_user: vagrant
+  vars:
+  tasks:
+  - cron:
+     minute: "1"
+     hour: "4"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/DailyMailReports.py all hemendra@bcjukebox.in  rishi@bcjukebox.in jasdeep@bcjukebox.in vaibhav@bcjukebox.in deb.dutta@bcjukebox.in chirag.somani@bcjukebox.in rathin.kapadia@bcjukebox.in sarferaj.shah@bcjukebox.in k.mahesh@bcjukebox.in vishal.rawat@bcjukebox.in sriram.laxman@bcjukebox.in pavan.kumar@bcjukebox.in"
+  - cron:
+     minute: "2"
+     hour: "4"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/saumyaDailyReport.py all kritika.maurya@bcjukebox.in rathin.kapadia@bcjukebox.in saeed.ahmed@bcjukebox.in kishan.tank@bcjukebox.in deb.dutta@bcjukebox.in hemendra@bcjukebox.in rishi@bcjukebox.in jasdeep@bcjukebox.in vaibhav@bcjukebox.in chirag.somani@bcjukebox.in neeraj.deogade@bcjukebox.in siddharth.varma@bcjukebox.in pavan.kumar@bcjukebox.in"
+  - cron:
+     minute: "3"
+     hour: "4"
+     weekday: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/playlistUpdateReport.py"
+  - cron:
+     minute: "*/30"
+     job: "/home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/updater.py >> /home/sysadmin/logs/updater.log 2>&1"
+  - cron:
+     minute: "*/5"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/crons/new_clean_songs.py >> /home/sysadmin/logs/clean_songs.log 2>&1"
+  - cron:
+     minute: "*"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/crons/upload_to_s3_cron.py >> /home/sysadmin/logs/s3_cron.log 2>&1"
+  - cron:
+     minute: "*"
+     hour: "8"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/crons/intercom_data.py"
+  - cron:
+     minute: "*"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py updateDeviceCache >> /home/sysadmin/logs/updatedevicecache.log  2>&1"
+  - cron:
+     special_time: "reboot"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py updateDeviceCache >> /home/sysadmin/logs/updatedevicecache.log  2>&1"
+  - cron:
+     minute: "30"
+     hour: "4"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py changePriorityReq"
+  - cron:
+     minute: "0"
+     hour: "5"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py deleteCouchSongs all"
+  - cron:
+     minute: "30"
+     hour: "9"
+     weekday: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/playlistUpdates.py 7"
+  - cron:
+     minute: "30"
+     hour: "9"
+     day: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/playlistUpdates.py 30"
+  - cron:
+     minute: "0"
+     hour: "4"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/crons/add_delete_couch_songs.py >> /home/sysadmin/logs/sync_songs.log 2>&1"
+  - cron:
+     minute: "5"
+     weekday: "4,5"
+     job: "$HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/crons/bbq_nation_thursday.py >> /home/sysadmin/logs/bbq_ads.log 2>&1"
+  - cron:
+     minute: "8"
+     day: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py buildMonthsFeedbackTickets >> /home/sysadmin/logs/buildMonthsFeedbackTickets.log 2>&1"
+  - cron:
+     hour: "9"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py createDailyFeedbackTickets >> /home/sysadmin/logs/createDailyFeedbackTickets.log 2>&1"
+  - cron:
+     hour: "9"
+     day: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py createCurationTickets 15 30 >> /home/sysadmin/logs/createCurationTickets.log 2>&1" 
+  - cron:
+     hour: "9"
+     day: "16"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py createCurationTickets 15 >> /home/sysadmin/logs/createCurationTickets.log 2>&1"
+  - cron:
+     minute: "9"
+     weekday: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py createCurationTickets 7 >> /home/sysadmin/logs/createCurationTickets.log 2>&1"
+  - cron:
+     minute: "43"
+     hour: "9"
+     job: " . $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py createFinanceTickets >> /home/sysadmin/logs/createFinanceTickets.log 2>&1"
+  - cron:
+     hour: "10,2,6"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py getviewsandcounts >> /home/sysadmin/logs/plsapprove.log 2>&1" 
+  - cron:
+     minute: "0"
+     hour: "21"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/dailyPlaylistReport.py >> /home/sysadmin/logs/dlplreport.log 2>&1"
+  - cron:
+     hour: "8"
+     weekday: "1"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py getzomatoreviews"
+  - cron:
+     minute: "5"
+     hour: "5"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py initCouch >> /home/sysadmin/logs/initCouch.log  2>&1 "
+  - cron:
+     minute: "13"
+     hour: "5"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py update_expected_close_active_deals"
+  - cron:
+     minute: "34"
+     hour: "7"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/dataSanityCheck.py"
+  - cron:
+     minute: "48"
+     hour: "7"
+     weekday: "1"
+     job: " . $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/dataSanityCheck.py customersuccess@bcjukebox.in"
+  - cron:
+     minute: "30"
+     hour: "6"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py updateFutureInvoices >> /home/sysadmin/logs/updateFutureInvoices.log"
+  - cron:
+     minute: "4"
+     hour: "5"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py markExpiredNActiveContracts >> /home/sysadmin/logs/expired_contracts.log"
+  - cron:
+     minute: "40"
+     hour: "6"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py generateInvoices >> /home/sysadmin/logs/generateInvoices.log"
+  - cron:
+     minute: "30"
+     hour: "6"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py generateContracts >> /home/sysadmin/logs/generateContracts.log"
+  - cron:
+     minute: "*"
+     hour: "*"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/manage.py tempCode >> /home/sysadmin/logs/tempcouchdocaddnagraj.log"
+  - cron:
+     minute: "31"
+     hour: "11"
+     day: "1"
+     job: " . $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/reports/enterpriseReport.py >> /home/sysadmin/logs/enterprise.log 2>&1"
+  - cron:
+     minute: "*/2"
+     job: ". $HOME/.profile; /home/sysadmin/code/serverapi/dj11_venv/bin/python /home/sysadmin/code/serverapi/misc/shuffle_song_in_pl.py >> /home/sysadmin/logs/shuffle_song.log 2>&1"
+ 
