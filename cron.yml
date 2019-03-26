@@ -1,0 +1,6 @@
+#the cron module
+---
+- hosts: all
+  tasks:
+  - name: add the crone job to test user
+    cron: name="list files" minute="0" 

@@ -24,4 +24,8 @@
       accept_hostkey: yes
       force: yes
       key_file: /home/vagrant/.ssh/github/id_rsa
+<<<<<<< HEAD
      become: true    
+=======
+     become: true  
+>>>>>>> 48b09639d89558a33766432ef0d98b85d6fb06e1
