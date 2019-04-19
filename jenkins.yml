@@ -1,0 +1,31 @@
+---
+- hosts: all
+  become: true
+  tasks:
+  - name: Install Oracle Java 8
+    become: yes
+    apt: name=default-jre state=present
+  - name: install jdk
+    become: yes
+    apt: name=default-jdk state=latest
+  - name: ensure the jenkins apt repository key is installed
+    apt_key: url=https://pkg.jenkins.io/debian-stable/jenkins.io.key state=present
+    become: yes
+
+  - name: ensure the repository is configured
+    apt_repository: repo='deb https://pkg.jenkins.io/debian-stable binary/' state=present
+    become: yes
+
+ # - name: add repository to the system
+  #  get_url: wget -q -O - https://pkg.jenkins.io/debian/jenkins-ci.org.key | sudo apt-key add -
+  #- name:  append the Debian package repository address to the server's sources.list
+   # shell: echo deb https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list
+  #- name: install jenkins
+   # service: name=jenkins state=present
+  - name: ensure jenkins is installed
+    apt: name=jenkins update_cache=yes
+    become: yes
+  - name: ensure jenkins is running
+    service: name=jenkins state=started
+
+
